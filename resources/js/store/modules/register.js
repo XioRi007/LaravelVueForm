@@ -85,15 +85,12 @@ const actions = {
             body:formData
         });
         const res = await _res.json();
-        if(!res.error){
+        if(res.success){
             state.personal.id = res.id;
         }
         else{
             console.log(res);
-            // if(res.validation){
-            //     throw res.validation;
-            // }
-            throw new Error(res.error);
+            throw res.errors;
         }
     },
 
@@ -115,10 +112,10 @@ const actions = {
             body:formData
         });
         const res = await _res.json();
-        if(res.error){
+        if(!res.success){
             console.log(res);
-            if(res.validation){
-                throw res.validation;
+            if(res.errors){
+                throw res.errors;
             }
             throw new Error(res.error);
         }
@@ -142,8 +139,11 @@ const actions = {
             body:formData
         });
         const res = await _res.json();
-        if(res.error){
-            console.log(res.error);
+        if(!res.success){
+            console.log(res);
+            if(res.errors){
+                throw res.errors;
+            }
             throw new Error(res.error);
         }
     }

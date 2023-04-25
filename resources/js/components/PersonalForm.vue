@@ -38,10 +38,15 @@
         });
     }
     const handleError = (err) => {
-        formRef.value.classList.remove('was-validated');
-        formRef.value[err.field].classList.add('is-invalid');
-        const errorField = document.getElementById(`${err.field}_error`);
-        errorField.textContent=err.message;
+        if(err instanceof Error){
+            commonError.value = err.message;
+        }
+        for (const field in err) {
+            formRef.value.classList.remove('was-validated');
+            formRef.value[field].classList.add('is-invalid');
+            const errorField = document.getElementById(`${field}_error`);
+            errorField.textContent=err[field].join(' \n');
+        }
     }
 
     /**
@@ -52,23 +57,22 @@
         e.preventDefault();
         if (formRef.value.checkValidity()) {
             try{
+                if(personalForm.phone === "+0(000)-000-0000"){
+                    throw {
+                        phone:['Enter real phone number.']
+                    }
+                }
                 const userId = localStorage.getItem('user');
                 if(userId != null){
-                    console.log('updateParticipant')
                     await store.dispatch('register/updateParticipant');
                 }else{
-                    console.log('registerParticipant')
                     await store.dispatch('register/registerParticipant');
                     const user = store.getters['register/getId'];
                     localStorage.setItem('user', user);
                 }
                 props.onNext();
             }catch(err){
-                if(err.field != null){
-                    handleError(err);
-                }else{
-                    commonError.value = err.message
-                }
+                handleError(err);
             }
         }else{
             e.stopPropagation()
@@ -92,7 +96,7 @@
         <label  class="col-sm-3 col-form-label required" for="firstName">First Name</label>
         <div class="col-sm-9">
             <input id="firstName" name="firstName" class="form-control" type="text" maxlength="30" :value="personalForm.firstName" @input="setPersonal" required/>
-            <div class="invalid-feedback">
+            <div class="invalid-feedback" id="firstName_error">
                 Please enter a first name.
             </div>
         </div>
@@ -101,7 +105,7 @@
         <label  class="col-sm-3 col-form-label required" for="last-name">Last Name</label>
         <div class="col-sm-9">
             <input id="lastName" name="lastName" class="form-control" type="text" maxlength="30" :value="personalForm.lastName" @input="setPersonal" required />
-            <div class="invalid-feedback">
+            <div class="invalid-feedback" id="lastName_error">
                 Please enter a last name.
             </div>
         </div>
@@ -110,7 +114,7 @@
         <label  class="col-sm-3 col-form-label required" for="birthdate">Birthdate</label>
         <div class="col-sm-9">
             <input id="birthdate" name="birthdate" class="form-control" :max="todayDate()" type="date" :value="personalForm.birthdate" @input="setPersonal" required />
-            <div class="invalid-feedback">
+            <div class="invalid-feedback" id="birthdate_error">
                 Please enter a birthdate.
             </div>
         </div>
@@ -120,7 +124,7 @@
         <div class="col-sm-9">
             <input id="reportSubject" name="reportSubject" class="form-control" type="text" maxlength="255" :value="personalForm.reportSubject" @input="setPersonal" required />
             <div class="form-text" id="basic-addon4">Maximum length is 255 symbols.</div>
-            <div class="invalid-feedback">
+            <div class="invalid-feedback" id="reportSubject_error">
                 Please enter a report subject.
             </div>
         </div>
@@ -138,7 +142,7 @@
         <label  class="col-sm-3 col-form-label required" for="phone">Phone</label>
         <div class="col-sm-9">
             <input id="phone" name="phone" class="form-control" pattern="\+[0-9]{1}\([0-9]{3}\)-[0-9]{3}-[0-9]{4}" v-maska :data-maska=phoneMaska :value="personalForm.phone" @input="setPersonal" required>
-            <div class="invalid-feedback">
+            <div class="invalid-feedback" id="phone_error">
                 Please enter a phone.
             </div>
         </div>
@@ -146,7 +150,7 @@
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label required" for="email">Email</label>
         <div class="col-sm-9">
-            <input id="email" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" maxlength="30" :value="personalForm.email" @input="setPersonal" required />
+            <input id="email" name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" maxlength="50" :value="personalForm.email" @input="setPersonal" required />
             <div class="invalid-feedback" id="email_error">
                 Please enter a valid email.
             </div>
