@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MemberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::get('/', [MemberController::class, 'index'])->name('index');
+Route::get('/{id}', [MemberController::class, 'show'])->name('show');
+Route::post('/', [MemberController::class, 'register'])->name('register');
+Route::put('/{id}', [MemberController::class, 'update'])->name('update');
 
