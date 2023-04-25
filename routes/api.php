@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', [MemberController::class, 'index'])->name('index');
+Route::get('/count', [MemberController::class, 'count'])->name('count');
 Route::get('/{id}', [MemberController::class, 'show'])->name('show');
 Route::post('/', [MemberController::class, 'register'])->name('register');
 Route::put('/{id}', [MemberController::class, 'update'])->name('update');

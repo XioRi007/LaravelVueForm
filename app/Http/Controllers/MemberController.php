@@ -20,6 +20,15 @@ class MemberController extends Controller
     }
 
     /**
+     * Returns the count of the members of the conference.
+     * @return array
+     */
+    public function count():array
+    {
+        return ['count' => Member::count()];
+    }
+
+    /**
      * Returns the member of the conference.
      * @param Request $request
      * @param string $id
