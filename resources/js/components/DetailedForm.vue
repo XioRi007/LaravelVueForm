@@ -1,11 +1,13 @@
 <script setup>
     import { useStore } from 'vuex'
     import {computed, reactive, onMounted, ref } from 'vue';
+    import {handleValidationError} from "@/handlers";
     const store = useStore();
     const props = defineProps(['onNext', 'onBack']);
-    const error = ref('');
+    const commonError = ref('');
     const detailedForm = reactive(store.getters['register/getDetailed']);
     const id = computed(()=>store.getters['register/getId'])
+    const formRef = ref(null);
 
     /**
      * Input handler
@@ -28,7 +30,7 @@
             }
         }
         catch(err){
-            error.value = err.message;
+            commonError.value = err.message;
         }
     });
 
@@ -37,25 +39,31 @@
      *
      */
     const submit = async() => {
-        try {
-            const user = store.getters['register/getId'];
-            if(user != null){
+        const user = store.getters['register/getId'];
+        if(user != null){
             await store.dispatch('register/updateDetails');
-            }
-        } catch (err) {
-            error.value = err.message;
         }
     }
-    const backClick = (e) => {
-        e.preventDefault();
-        submit();
-        props.onBack();
+    const backClick = async (e) => {
+        try{
+            e.preventDefault();
+            await submit();
+            props.onBack();
+        }catch (err){
+            console.log(err)
+            handleValidationError(err, formRef, commonError);
+        }
     }
 
-    const nextClick = (e) => {
-        e.preventDefault();
-        submit();
-        props.onNext();
+    const nextClick = async (e) => {
+        try{
+            e.preventDefault();
+            await submit();
+            props.onNext();
+        }catch (err){
+            console.log(err)
+            handleValidationError(err, formRef, commonError);
+        }
     }
     /**
      * Saves image to the store
@@ -71,37 +79,48 @@
 </script>
 
 <template>
-    <form>
+    <form ref="formRef">
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label" for="company">Company</label>
         <div class="col-sm-9">
             <input id="company" name="company" maxlength="50" class="form-control" type="text" v-model="detailedForm.company" @input="setDetailed"/>
+            <div class="invalid-feedback" id="company_error">
+                Please enter a valid company.
+            </div>
         </div>
     </div>
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label" for="position">Position</label>
         <div class="col-sm-9">
             <input id="position" name="position" maxlength="50" class="form-control" type="text" v-model="detailedForm.position" @input="setDetailed"/>
+            <div class="invalid-feedback" id="position_error">
+                Please enter a valid position.
+            </div>
         </div>
     </div>
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label" for="about">About</label>
         <div class="col-sm-9">
             <textarea id="about" name="about" class="form-control" rows="5" v-model="detailedForm.about" @input="setDetailed"></textarea>
-
+            <div class="invalid-feedback" id="about_error">
+                Please enter a valid about.
+            </div>
         </div>
     </div>
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label" for="photo">Photo</label>
         <div class="col-sm-9">
             <input id="photo" name="photo" class="form-control" type="file" @input="setPhoto">
+            <div class="invalid-feedback" id="photo_error">
+                Please enter a valid photo.
+            </div>
         </div>
     </div>
     <div class="row mb-3 text-danger text-left">
         <p>* - Required</p>
     </div>
-    <div class="row mb-3 text-danger" v-if="error != ''">
-        <p>{{ error }}</p>
+    <div class="row mb-3 text-danger" v-if="commonError !== ''">
+        <p>{{ commonError }}</p>
     </div>
     <div class="controls">
         <button class="btn btn-success" @click="nextClick" type="submit">

@@ -2,6 +2,7 @@
     import { useStore } from 'vuex'
     import { vMaska } from "maska"
     import { onMounted, ref, reactive } from 'vue';
+    import {handleValidationError} from "@/handlers";
     const props = defineProps(['onNext']);
     const store = useStore();
     const formRef = ref(null);
@@ -37,18 +38,6 @@
             value:e.target.value
         });
     }
-    const handleError = (err) => {
-        if(err instanceof Error){
-            commonError.value = err.message;
-        }
-        for (const field in err) {
-            formRef.value.classList.remove('was-validated');
-            formRef.value[field].classList.add('is-invalid');
-            const errorField = document.getElementById(`${field}_error`);
-            errorField.textContent=err[field].join(' \n');
-        }
-    }
-
     /**
      * If localStorage contains id - updating
      * Else creating register
@@ -72,7 +61,7 @@
                 }
                 props.onNext();
             }catch(err){
-                handleError(err);
+                handleValidationError(err, formRef, commonError);
             }
         }else{
             e.stopPropagation()

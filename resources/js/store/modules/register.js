@@ -66,7 +66,7 @@ const actions = {
         for (const [name, value] of Object.entries(res)) {
             commit('setDetails', {
                 name,
-                value: value != 'null' ? value: ''
+                value: value !== 'null' ? value: ''
             })
         }
     },
@@ -89,7 +89,6 @@ const actions = {
             state.personal.id = res.id;
         }
         else{
-            console.log(res);
             throw res.errors;
         }
     },
@@ -113,7 +112,6 @@ const actions = {
         });
         const res = await _res.json();
         if(!res.success){
-            console.log(res);
             if(res.errors){
                 throw res.errors;
             }
@@ -140,7 +138,6 @@ const actions = {
         });
         const res = await _res.json();
         if(!res.success){
-            console.log(res);
             if(res.errors){
                 throw res.errors;
             }
