@@ -18,21 +18,20 @@ const actions = {
      * Load to the state members list
      */
     async fetchMembers({commit}){
-        // const _res = await fetch(`${window.location.origin}/api/members`);
-        // const res = await _res.json();
-        const res = [];
+        const fields = ['fullName', 'photo', 'reportSubject', 'email'];
+        const url = `/api?fields=${JSON.stringify(fields)}`;
+        const _res = await fetch(url);
+        const res = await _res.json();
         commit('setMembers', res);
-
     },
 
     /**
      * Load to the state members count
      */
     async fetchMembersCount({commit}){
-        // const _res = await fetch(`${window.location.origin}/api/members/count`);
-        // const res = await _res.json();
-        const res = 10;
-        commit('setMembersCount', res.membersCount);
+        const _res = await fetch(`/api/count`);
+        const res = await _res.json();
+        commit('setMembersCount', res.count);
     }
 }
 

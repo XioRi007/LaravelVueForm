@@ -40,31 +40,35 @@ const actions = {
      * Loads to state personal information
      */
     async loadPersonal({commit}){
-        // const _res = await fetch(`${window.location.origin}/api/user/personal/${state.personal.id}`);
-        // const res = await _res.json();
-        // for (const [name, value] of Object.entries(res)) {
-        //     commit('setPersonal', {
-        //         name,
-        //         value
-        //     })
-        // }
+        const fields = ['firstName', 'lastName', 'reportSubject', 'email', 'phone', 'country', 'birthdate'];
+        const url = `/api/${state.personal.id}?fields=${JSON.stringify(fields)}`;
+        const _res = await fetch(url);
+        const res = await _res.json();
+        for (const [name, value] of Object.entries(res)) {
+            commit('setPersonal', {
+                name,
+                value
+            })
+        }
     },
 
     /**
      * Loads to state detail information
      */
     async loadDetails({commit}){
-        // const _res = await fetch(`${window.location.origin}/api/user/details/${state.personal.id}`);
-        // const res = await _res.json();
-        // if(res.error){
-        //     throw new Error({message:res.error});
-        // }
-        // for (const [name, value] of Object.entries(res)) {
-        //     commit('setDetails', {
-        //         name,
-        //         value: value != 'null' ? value: ''
-        //     })
-        // }
+        const fields = ['about', 'company', 'photo', 'position'];
+        const url = `/api/${state.personal.id}?fields=${JSON.stringify(fields)}`;
+        const _res = await fetch(url);
+        const res = await _res.json();
+        if(res.error){
+            throw new Error({message:res.error});
+        }
+        for (const [name, value] of Object.entries(res)) {
+            commit('setDetails', {
+                name,
+                value: value != 'null' ? value: ''
+            })
+        }
     },
 
     /**
@@ -72,29 +76,25 @@ const actions = {
      */
     async registerParticipant(){
         let formData = new FormData();
-        formData.append('first_name', state.personal.firstName);
-        formData.append('last_name', state.personal.lastName);
-        formData.append('birthdate', state.personal.birthdate);
-        formData.append('report_subject', state.personal.reportSubject);
-        formData.append('country', state.personal.country);
-        formData.append('phone', state.personal.phone);
-        formData.append('email', state.personal.email);
-        console.log(formData);
-        // const _res = await fetch(`${window.location.origin}/api/register`, {
-        //     method:'POST',
-        //     body:formData
-        // });
-        // const res = await _res.json();
-        // if(!res.error){
-        //     state.personal.id = res.id;
-        // }
-        // else{
-        //     console.log(res);
-        //     if(res.validation){
-        //         throw res.validation;
-        //     }
-        //     throw new Error(res.error);
-        // }
+        for (const property in state.personal) {
+            formData.append(property, state.personal[property]);
+        }
+        formData.delete('id');
+        const _res = await fetch(`/api`, {
+            method:'POST',
+            body:formData
+        });
+        const res = await _res.json();
+        if(!res.error){
+            state.personal.id = res.id;
+        }
+        else{
+            console.log(res);
+            // if(res.validation){
+            //     throw res.validation;
+            // }
+            throw new Error(res.error);
+        }
     },
 
     /**
@@ -102,28 +102,26 @@ const actions = {
      */
     async updateParticipant(){
         let formData = new FormData();
-        formData.append('id', state.personal.id);
-        formData.append('first_name', state.personal.firstName);
-        formData.append('last_name', state.personal.lastName);
-        formData.append('birthdate', state.personal.birthdate);
-        formData.append('report_subject', state.personal.reportSubject);
-        formData.append('country', state.personal.country);
-        formData.append('phone', state.personal.phone);
-        formData.append('email', state.personal.email);
+        for (const property in state.personal) {
+            if(state.personal[property]){
+                formData.append(property, state.personal[property]);
+            }
+        }
+        formData.delete('id');
+        formData.append('_method', 'PUT');
 
-        console.log(formData);
-        // const _res = await fetch(`${window.location.origin}/api/update`, {
-        //     method:"POST",
-        //     body:formData
-        // });
-        // const res = await _res.json();
-        // if(res.error){
-        //     console.log(res);
-        //     if(res.validation){
-        //         throw res.validation;
-        //     }
-        //     throw new Error(res.error);
-        // }
+        const _res = await fetch(`/api/${state.personal.id}`, {
+            method:"POST",
+            body:formData
+        });
+        const res = await _res.json();
+        if(res.error){
+            console.log(res);
+            if(res.validation){
+                throw res.validation;
+            }
+            throw new Error(res.error);
+        }
     },
 
     /**
@@ -132,21 +130,22 @@ const actions = {
      */
     async updateDetails(){
         let formData = new FormData();
-        formData.append('file', state.detailed.photo);
-        formData.append('company', state.detailed.company);
-        formData.append('position', state.detailed.position);
-        formData.append('about', state.detailed.about);
-        formData.append('id', state.personal.id);
-        console.log(formData);
-        // const _res = await fetch(`${window.location.origin}/api/update`, {
-        //     method:"POST",
-        //         body:formData
-        // });
-        // const res = await _res.json();
-        // if(res.error){
-        //     console.log(res.error);
-        //     throw new Error(res.error);
-        // }
+        for (const property in state.detailed) {
+            if(state.detailed[property]){
+                formData.append(property, state.detailed[property]);
+            }
+        }
+        formData.delete('id');
+        formData.append('_method', 'PUT');
+        const _res = await fetch(`/api/${state.personal.id}`, {
+            method:"POST",
+            body:formData
+        });
+        const res = await _res.json();
+        if(res.error){
+            console.log(res.error);
+            throw new Error(res.error);
+        }
     }
 }
 

@@ -16,14 +16,14 @@
             value:e.target.value
         })
     }
-    
+
     /**
      * If store contains member's id
      * Loads details
      */
     onMounted(async ()=>{
         try{
-            if(id != null){  
+            if(id.value != null){
                 await store.dispatch('register/loadDetails');
             }
         }
@@ -34,16 +34,16 @@
 
     /**
      * Updating member
-     * 
+     *
      */
     const submit = async() => {
         try {
             const user = store.getters['register/getId'];
             if(user != null){
             await store.dispatch('register/updateDetails');
-            }        
+            }
         } catch (err) {
-            error.value = err.message;        
+            error.value = err.message;
         }
     }
     const backClick = (e) => {
@@ -59,7 +59,7 @@
     }
     /**
      * Saves image to the store
-     * 
+     *
      */
     const setPhoto = (event) => {
         store.commit('register/setDetails', {
@@ -96,13 +96,13 @@
         <div class="col-sm-9">
             <input id="photo" name="photo" class="form-control" type="file" @input="setPhoto">
         </div>
-    </div>    
+    </div>
     <div class="row mb-3 text-danger text-left">
         <p>* - Required</p>
     </div>
     <div class="row mb-3 text-danger" v-if="error != ''">
         <p>{{ error }}</p>
-    </div>    
+    </div>
     <div class="controls">
         <button class="btn btn-success" @click="nextClick" type="submit">
             Complete
