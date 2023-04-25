@@ -45,16 +45,6 @@ class UpdateMemberRequest extends FormRequest
             'position'=>'string|max:50',
         ];
     }
-
-//    protected function getValidatorInstance()
-//    {
-//        $validator =  \Validator::make($this->all(), $this->rules(),  $this->messages(), $this->attributes());
-////        $validator->sometimes('reason', 'required|max:500', function($input) {
-////            return $input->games >= 100;
-////        });
-//
-//        return $validator;
-//    }
     /**
      * Handle a failed validation attempt.
      *

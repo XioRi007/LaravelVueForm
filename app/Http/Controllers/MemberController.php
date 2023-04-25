@@ -12,6 +12,7 @@ class MemberController extends Controller
 {
     /**
      * Returns the members of the conference.
+     * @return Collection
      */
     public function index(): Collection
     {
@@ -19,7 +20,10 @@ class MemberController extends Controller
     }
 
     /**
-     * Returns the members of the conference.
+     * Returns the member of the conference.
+     * @param Request $request
+     * @param string $id
+     * @return Member
      */
     public function show(Request $request, string $id): Member
     {
@@ -28,7 +32,9 @@ class MemberController extends Controller
     }
 
     /**
-     * Returns the members of the conference.
+     * Registers the member of the conference.
+     * @param RegisterMemberRequest $request
+     * @return array
      */
     public function register(RegisterMemberRequest $request): array
     {
