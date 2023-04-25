@@ -7,6 +7,7 @@
 
 <template>
     <ShareNetwork
+          :title="shareText"
           class="mx-5"
           network="facebook"
           :url="url"
