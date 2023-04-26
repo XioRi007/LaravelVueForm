@@ -9,7 +9,7 @@
     await store.dispatch('members/fetchMembers');
     members.value = store.getters['members/getMembers'];
   });
-  
+
 </script>
 
 <template>
@@ -28,14 +28,14 @@
     <tbody class="table-group-divider ">
       <tr v-for="member in members" :key="member.id">
         <td><img :src="member.photo" class="rounded-circle object-fit-cover" width="50" height="50"></td>
-        <td>{{ member.fullName}}</td>
+        <td>{{ member.firstName+" "+ member.lastName}}</td>
         <td>{{ member.reportSubject }}</td>
         <td><a href="{{ member.email }}">{{ member.email }}</a></td>
       </tr>
     </tbody>
   </table></div>
   </div>
-  
+
 </template>
 
 

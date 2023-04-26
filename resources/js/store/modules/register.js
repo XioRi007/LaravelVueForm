@@ -56,7 +56,7 @@ const actions = {
      * Loads to state detail information
      */
     async loadDetails({commit}){
-        const fields = ['about', 'company', 'photo', 'position'];
+        const fields = ['about', 'company', 'position'];
         const url = `/api/${state.personal.id}?fields=${JSON.stringify(fields)}`;
         const _res = await fetch(url);
         const res = await _res.json();

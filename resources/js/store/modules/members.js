@@ -18,10 +18,10 @@ const actions = {
      * Load to the state members list
      */
     async fetchMembers({commit}){
-        const fields = ['fullName', 'photo', 'reportSubject', 'email'];
+        const fields = ['firstName', 'lastName', 'photo', 'reportSubject', 'email'];
         const url = `/api?fields=${JSON.stringify(fields)}`;
         const _res = await fetch(url);
-        const res = await _res.json();
+        let res = await _res.json();
         commit('setMembers', res);
     },
 

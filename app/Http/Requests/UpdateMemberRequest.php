@@ -39,7 +39,7 @@ class UpdateMemberRequest extends FormRequest
                 'max:50',
                 Rule::unique('members')->ignore($this->route('id')),
             ],
-            'photo'=>'string',
+            'photo'=>'file',
             'about'=>'string',
             'company'=>'string|max:50',
             'position'=>'string|max:50',

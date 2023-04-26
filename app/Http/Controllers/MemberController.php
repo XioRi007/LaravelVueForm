@@ -7,16 +7,30 @@ use App\Http\Requests\UpdateMemberRequest;
 use App\Models\Member;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
     /**
      * Returns the members of the conference.
+     * @param Request $request
      * @return Collection
      */
-    public function index(): Collection
+    public function index(Request $request): Collection
     {
-        return Member::all();
+        $columns = json_decode(str_replace("'", '"', $request->query('fields')));
+        if(empty($columns)){
+            $columns = ['*'];
+        }
+        $members = Member::all($columns);
+        if(in_array('photo', $columns)){
+            $members = $members->map(function($member) {
+                $member->photo = App::make('url')->to(Storage::url('public/photos/'.$member->photo));
+                return $member;
+            });
+        }
+        return $members;
     }
 
     /**
@@ -37,7 +51,15 @@ class MemberController extends Controller
     public function show(Request $request, string $id): Member
     {
         $columns = json_decode(str_replace("'", '"', $request->query('fields')));
-        return Member::findOrFail($id, $columns);
+        if(empty($columns)){
+            $columns = ['*'];
+        }
+        $member = Member::findOrFail($id, $columns);
+        if(in_array('photo', $columns)){
+            $photoUrl = App::make('url')->to(Storage::url('public/photos/'.$member->photo));
+            $member->photo = $photoUrl;
+        }
+        return $member;
     }
 
     /**
@@ -59,7 +81,14 @@ class MemberController extends Controller
      */
     public function update(UpdateMemberRequest $request, string $id): array
     {
-        Member::where('id', $id)->update($request->validated());
+        $data = $request->validated();
+        if($request->hasFile('photo')){
+            $file = $request->file('photo');
+            $filename = uniqid().'.'.$file->getClientOriginalExtension();
+            $file->storeAs('public/photos/', $filename);
+            $data['photo'] = $filename;
+        }
+        Member::where('id', $id)->update($data);
         return ['success' => true];
     }
 }
