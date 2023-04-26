@@ -24,7 +24,7 @@ class MemberController extends Controller
             $columns = ['*'];
         }
         $members = Member::all($columns);
-        if(in_array('photo', $columns)){
+        if(in_array('photo', $columns) || $columns == ['*']){
             $members = $members->map(function($member) {
                 if($member->photo){
                     $photoUrl = App::make('url')->to(Storage::url('public/photos/'.$member->photo));
@@ -60,7 +60,7 @@ class MemberController extends Controller
             $columns = ['*'];
         }
         $member = Member::findOrFail($id, $columns);
-        if(in_array('photo', $columns)){
+        if(in_array('photo', $columns) || $columns == ['*']){
             if($member->photo){
                 $photoUrl = App::make('url')->to(Storage::url('public/photos/'.$member->photo));
             }else{
