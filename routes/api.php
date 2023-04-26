@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MemberController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::get('/', [MemberController::class, 'index'])->name('index');
-Route::get('/count', [MemberController::class, 'count'])->name('count');
-Route::get('/{id}', [MemberController::class, 'show'])->name('show');
-Route::post('/', [MemberController::class, 'register'])->name('register');
-Route::put('/{id}', [MemberController::class, 'update'])->name('update');
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/admin', [AdminController::class, 'index']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+Route::get('/', [MemberController::class, 'index']);
+Route::get('/count', [MemberController::class, 'count']);
+Route::get('/{id}', [MemberController::class, 'show']);
+Route::put('/{id}', [MemberController::class, 'update']);
+Route::post('/', [MemberController::class, 'register']);
 
