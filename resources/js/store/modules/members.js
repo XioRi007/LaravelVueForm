@@ -1,6 +1,22 @@
+import axios from "axios";
+const defaultForm = {
+    id:null,
+    firstName: '',
+    lastName: '',
+    birthdate: '',
+    reportSubject: '',
+    country: 'Ukraine',
+    phone: '+',
+    email: '',
+    company:'',
+    position:'',
+    about:'',
+    photo:''}
+
 const state = {
     count:0,
-    list:[]
+    list:[],
+    form: defaultForm
 }
 // getters
 const getters = {
@@ -9,16 +25,41 @@ const getters = {
     },
     getMembersCount(){
         return state.count;
+    },
+    getPersonal(){
+        return {
+            id: state.form.id,
+            firstName: state.form.firstName,
+            lastName: state.form.lastName,
+            birthdate: state.form.birthdate,
+            reportSubject: state.form.reportSubject,
+            country: state.form.country,
+            phone: state.form.phone,
+            email: state.form.email,
+        };
+    },
+    getId(){
+        return state.form.id;
+    },
+    getDetailed(){
+        return {
+            company: state.form.company,
+            position: state.form.position,
+            about: state.form.about,
+            photo: state.form.photo
+        };
     }
 }
 
 // actions
 const actions = {
     /**
-     * Load to the state members list
+     * Load to the state members list.
+     * @param commit
+     * @param fields
+     * @returns {Promise<void>}
      */
-    async fetchMembers({commit}){
-        const fields = ['firstName', 'lastName', 'photo', 'reportSubject', 'email'];
+    async fetchMembers({commit}, fields){
         const url = `/api?fields=${JSON.stringify(fields)}`;
         const _res = await fetch(url);
         let res = await _res.json();
@@ -26,7 +67,101 @@ const actions = {
     },
 
     /**
+     * Deletes the user
+     * @param rootGetters
+     * @param id
+     * @returns {Promise<void>}
+     */
+    async delete({rootGetters}, id){
+        const token = rootGetters['auth/getToken'];
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const _res = await axios.delete(`/api/${id}`);
+        const res = await _res.data;
+        if(!res.success){
+            console.log(res);
+            throw new Error(res.message);
+        }
+    },
+
+    /**
+     * Loads to state member information
+     * @param commit
+     * @param fields
+     * @returns {Promise<void>}
+     */
+    async loadMember({commit}, fields){
+        const url = `/api/${state.form.id}?fields=${JSON.stringify(fields)}`;
+        const _res = await fetch(url);
+        const res = await _res.json();
+        if(res.error){
+            throw new Error(res.error);
+        }
+        for (const [name, value] of Object.entries(res)) {
+            commit('setForm', {
+                name,
+                value: value !== 'null' ? value: ''
+            })
+        }
+    },
+
+    /**
+     * Updating member's detail info
+     * @param payload id and data to update
+     * @returns {Promise<void>}
+     */
+    async update({}, payload){
+        let formData = new FormData();
+        for (const property in payload) {
+            if(payload[property] || typeof payload[property] === "boolean"){
+                formData.append(property, payload[property]);
+            }
+        }
+        if(payload.hasOwnProperty('photo') && typeof payload['photo'] === 'string'){
+            formData.delete('photo');
+        }
+        formData.delete('id');
+        formData.append('_method', 'PUT');
+        const _res = await fetch(`/api/${payload.id}`, {
+            method:"POST",
+            body:formData
+        });
+        const res = await _res.json();
+        if(!res.success){
+            if(res.errors){
+                throw res.errors;
+            }
+            throw new Error(res.error);
+        }
+    },
+
+    /**
+     * Register member
+     * @param rootGetters
+     * @returns {Promise<void>}
+     */
+    async registerParticipant({rootGetters}){
+        let formData = new FormData();
+        for (const property in rootGetters['members/getPersonal']) {
+            formData.append(property, state.form[property]);
+        }
+        formData.delete('id');
+        const _res = await fetch(`/api`, {
+            method:'POST',
+            body:formData
+        });
+        const res = await _res.json();
+        if(res.success){
+            state.form.id = res.id;
+        }
+        else{
+            throw res.errors;
+        }
+    },
+
+    /**
      * Load to the state members count
+     * @param commit
+     * @returns {Promise<void>}
      */
     async fetchMembersCount({commit}){
         const _res = await fetch(`/api/count`);
@@ -42,6 +177,12 @@ const mutations = {
     },
     setMembersCount(state, payload){
         state.count = payload;
+    },
+    setForm(state, payload){
+        state.form[payload.name] = payload.value;
+    },
+    clearForm(state){
+        Object.assign(state, defaultForm);
     }
 }
 

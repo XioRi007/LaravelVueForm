@@ -1,4 +1,4 @@
-<script setup>    
+<script setup>
     import { ref, computed, onBeforeMount, onUnmounted } from 'vue';
     import {useStore} from 'vuex'
     import PersonalForm from '../components/PersonalForm.vue'
@@ -29,23 +29,23 @@
             await store.dispatch('members/fetchMembersCount');
             membersCount.value = store.getters['members/getMembersCount'];
     });
-    
+
     /**
      * Clears state and localStorage
      */
     onUnmounted(()=>{
         if(completed.value == true){
             localStorage.clear();
-            store.commit('register/clear');
+            store.commit('members/clearForm');
         }
     })
-    
+
     /**
      * Step back
      * Saves to localStorage new step
      */
     const backClick = (e) => {
-        step.value --;    
+        step.value --;
         localStorage.setItem('step', step.value);
     }
     /**
@@ -53,20 +53,20 @@
      * Saves to localStorage new step
      */
     const nextClick = (e) => {
-        if(step.value != maxStep){            
-            step.value ++;    
+        if(step.value != maxStep){
+            step.value ++;
             localStorage.setItem('step', step.value);
         }
     }
 </script>
-<template> 
+<template>
 <div class="row justify-content-center">
   <div class="wrapper-stepper col col-lg-9 py-5 p-lg-5">
           <div class="stepper">
               <div class="stepper-progress">
                   <div class="stepper-progress-bar" :style="'width:' + stepperProgress "></div>
               </div>
-  
+
               <div class="stepper-item" :class="{ 'current': step == item, 'success': step > item }" v-for="item in 2" :key="item">
                   <div class="stepper-item-counter">
                       <img class="icon-success" src="https://www.seekpng.com/png/full/1-10353_check-mark-green-png-green-check-mark-svg.png" alt="">
@@ -95,12 +95,12 @@
           </div>
 
         </div>
-      </div>  
-        
       </div>
-      
-      
-      
+
+      </div>
+
+
+
 </div>
 </template>
 <style>

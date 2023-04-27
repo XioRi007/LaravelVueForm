@@ -1,19 +1,20 @@
 <script setup>
     import { useStore } from 'vuex'
-    import {computed, reactive, onMounted, ref } from 'vue';
+    import {computed, onMounted, ref } from 'vue';
     import {handleValidationError} from "@/handlers";
-    const store = useStore();
+
     const props = defineProps(['onNext', 'onBack']);
+    const store = useStore();
     const commonError = ref('');
-    const detailedForm = reactive(store.getters['register/getDetailed']);
-    const id = computed(()=>store.getters['register/getId'])
+    const detailedForm = ref({});
+    const id = computed(()=>store.getters['members/getId'])
     const formRef = ref(null);
 
     /**
      * Input handler
      */
     const setDetailed = (e) =>{
-        store.commit('register/setDetails', {
+        store.commit('members/setForm', {
             name:e.target.name,
             value:e.target.value
         })
@@ -26,10 +27,12 @@
     onMounted(async ()=>{
         try{
             if(id.value != null){
-                await store.dispatch('register/loadDetails');
+                await store.dispatch('members/loadMember', ['about', 'company', 'position']);
+                detailedForm.value = store.getters['members/getDetailed'];
             }
         }
         catch(err){
+            console.log(err)
             commonError.value = err.message;
         }
     });
@@ -39,9 +42,9 @@
      *
      */
     const submit = async() => {
-        const user = store.getters['register/getId'];
+        const user = store.getters['members/getId'];
         if(user != null){
-            await store.dispatch('register/updateDetails');
+            await store.dispatch('members/update', {...detailedForm.value, id:id.value});
         }
     }
     const backClick = async (e) => {
@@ -65,12 +68,8 @@
             handleValidationError(err, formRef, commonError);
         }
     }
-    /**
-     * Saves image to the store
-     *
-     */
     const setPhoto = (event) => {
-        store.commit('register/setDetails', {
+        store.commit('members/setForm', {
             name:'photo',
             value:event.target.files[0]
         })

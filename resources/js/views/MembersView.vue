@@ -6,7 +6,8 @@
   const members = ref([]);
   const img = ref('');
   onBeforeMount(async() => {
-    await store.dispatch('members/fetchMembers');
+    const fields = ['firstName', 'lastName', 'photo', 'reportSubject', 'email'];
+    await store.dispatch('members/fetchMembers', fields);
     members.value = store.getters['members/getMembers'];
   });
 
@@ -27,7 +28,7 @@
     </thead>
     <tbody class="table-group-divider ">
       <tr v-for="member in members" :key="member.id">
-        <td><img :src="member.photo" class="rounded-circle object-fit-cover" width="50" height="50"></td>
+        <td><img :src="member.photo" class="rounded-circle" width="50" height="50"></td>
         <td>{{ member.firstName+" "+ member.lastName}}</td>
         <td>{{ member.reportSubject }}</td>
         <td><a href="{{ member.email }}">{{ member.email }}</a></td>
@@ -43,6 +44,9 @@
 <style scoped>
 .members-table {
   margin-top: 1rem;
+}
+img {
+   object-fit: cover;
 }
 </style>
 
