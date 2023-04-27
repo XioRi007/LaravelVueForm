@@ -19,6 +19,19 @@ class UpdateMemberRequest extends FormRequest
     {
         return true;
     }
+    /**
+     * Prepare inputs for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation(): void
+    {
+        if($this->has('hidden')){
+            $this->merge([
+                'hidden' => filter_var($this->hidden, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            ]);
+        }
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -39,6 +52,7 @@ class UpdateMemberRequest extends FormRequest
                 'max:50',
                 Rule::unique('members')->ignore($this->route('id')),
             ],
+            'hidden'=>'boolean',
             'photo'=>'file',
             'about'=>'string',
             'company'=>'string|max:50',

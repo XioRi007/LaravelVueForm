@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('country', 50);
             $table->string('phone', 16);
             $table->string('email', 50)->unique();
+            $table->boolean('hidden', 50)->default(false);
             $table->text('photo')->nullable();
             $table->text('about')->nullable();
             $table->string('company', 50)->nullable();

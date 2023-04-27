@@ -100,4 +100,15 @@ class MemberController extends Controller
         Member::where('id', $id)->update($data);
         return ['success' => true];
     }
+    /**
+     * Deletes the members of the conference.
+     * @param string $id
+     * @return array
+     */
+    public function delete(string $id): array
+    {
+        $member = Member::findOrFail($id);
+        $member->delete();
+        return ['success' => true];
+    }
 }

@@ -38,4 +38,13 @@ class Member extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'hidden' => 'boolean',
+    ];
 }
