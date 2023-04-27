@@ -19,6 +19,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin', [AdminController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::delete('/{id}', [MemberController::class, 'delete']);
 });
 Route::get('/', [MemberController::class, 'index']);
 Route::get('/count', [MemberController::class, 'count']);
