@@ -36,7 +36,7 @@ class MemberController extends Controller
                 if($member->photo){
                     $photoUrl = App::make('url')->to(Storage::url('public/photos/'.$member->photo));
                 }else{
-                    $photoUrl = App::make('url')->to(Storage::url('public/photos/default.png'));
+                    $photoUrl = 'https://cdn-icons-png.flaticon.com/512/847/847969.png?w=826&t=st=1682674212~exp=1682674812~hmac=3d05333ae74b2270ae2f3f88a63a36b000915801d18058d245ffc55e99c5b94a';
                 }
                 $member->photo = $photoUrl;
                 return $member;
@@ -71,7 +71,7 @@ class MemberController extends Controller
             if($member->photo){
                 $photoUrl = App::make('url')->to(Storage::url('public/photos/'.$member->photo));
             }else{
-                $photoUrl = App::make('url')->to(Storage::url('public/photos/default.png'));
+                $photoUrl = 'https://cdn-icons-png.flaticon.com/512/847/847969.png?w=826&t=st=1682674212~exp=1682674812~hmac=3d05333ae74b2270ae2f3f88a63a36b000915801d18058d245ffc55e99c5b94a';
             }
             $member->photo = $photoUrl;
         }
