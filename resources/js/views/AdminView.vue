@@ -32,11 +32,11 @@ onBeforeMount(async()=>{
 const logout = async () => {
     try {
         await store.dispatch('auth/logout');
-        await router.push('/');
+        window.location.href = '/';//not router.push to rerender the header link
     } catch (err) {
         console.log(err);
         store.commit('auth/deleteToken');
-        await router.push('/login');
+        window.location.href = '/login';
     }
 }
 const deleteHandler = (id) => {
@@ -78,7 +78,7 @@ const visibilityHandler = (id, hidden) => {
                                         title="Delete member"
                                         :icon="DeleteIcon"
                                         :handler="deleteHandler(member.id)"
-                                        text="Are you sure to delete member"
+                                        text="Are you sure to delete the member?"
                                         :target-id="'DeleteModal'+member.id">
                                     </Modal>
                                     <Modal

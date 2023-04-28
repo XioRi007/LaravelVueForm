@@ -5,7 +5,7 @@ import AdminView from "../views/AdminView.vue";
 import MemberRegisterView from "../views/MemberRegisterView.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
       {
           path: '/',

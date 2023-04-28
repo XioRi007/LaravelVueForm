@@ -23,7 +23,7 @@ const submit = async(e) => {
         console.log(formRef.value.checkValidity())
         if(formRef.value.checkValidity()){
             await store.dispatch('auth/login', form.value);
-            await router.push('/admin');
+            window.location.href = '/admin';//not router.push to rerender the header link
         }else{
             e.stopPropagation()
             formRef.value.classList.add('was-validated');

@@ -11,7 +11,7 @@ app.use(router);
 app.use(store);
 app.use(VueSocialSharing);
 
-await store.dispatch('auth/loadToken');
+store.dispatch('auth/loadToken');
 
 app.mount('#app');
 
