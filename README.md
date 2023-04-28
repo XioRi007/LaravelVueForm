@@ -10,6 +10,7 @@ composer install
 npm install
 npm run build
 php artisan storage:link
+php artisan migrate --seed
 ```
 If occurs the error during npm run build try the following
 ```
