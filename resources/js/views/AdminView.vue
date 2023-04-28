@@ -7,10 +7,12 @@ import DeleteIcon from "@/components/icons/DeleteIcon.vue";
 import EditIcon from "@/components/icons/EditIcon.vue";
 import ToggleVisibilityIcon from "@/components/icons/ToggleVisibilityIcon.vue";
 import EditForm from "@/components/EditForm.vue";
+import Loader from "@/components/Loader.vue";
 const router = useRouter();
 const store = useStore();
 const members = ref([]);
 const keys = ref([]);
+const loading = ref(true);
 const unwantedKeys = ['id', 'photo', 'email'];
 
 onBeforeMount(async()=>{
@@ -21,6 +23,7 @@ onBeforeMount(async()=>{
         await store.dispatch('members/fetchMembers', {fields:['*'], showHidden:true});
         members.value = store.getters['members/getMembers'];
         keys.value = Object.keys(members.value[0]).filter(key => !unwantedKeys.includes(key));
+        loading.value = false;
     }catch (err){
         console.log(err);
         await router.push('/login');
@@ -54,7 +57,8 @@ const visibilityHandler = (id, hidden) => {
     <div class="container my-5 text-center">
         <div class="border shadow p-5">
             <h1 class="mb-5">Admin</h1>
-            <div class="accordion accordion-flush" id="accordionExample">
+            <Loader v-if="loading"/>
+            <div v-else class="accordion accordion-flush" id="accordionExample">
                 <div class="accordion-item" v-for="member in members" :key="member.id">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + member.id" aria-expanded="false" :aria-controls="'collapse-' + member.id">

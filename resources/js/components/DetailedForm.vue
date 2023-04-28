@@ -2,6 +2,7 @@
     import { useStore } from 'vuex'
     import {computed, onMounted, ref } from 'vue';
     import {handleValidationError} from "@/handlers";
+    import Loader from "@/components/Loader.vue";
 
     const props = defineProps(['onNext', 'onBack']);
     const store = useStore();
@@ -9,6 +10,7 @@
     const detailedForm = ref({});
     const id = computed(()=>store.getters['members/getId'])
     const formRef = ref(null);
+    const loading = ref(true);
 
     /**
      * Input handler
@@ -35,6 +37,7 @@
             console.log(err)
             commonError.value = err.message;
         }
+        loading.value = false;
     });
 
     /**
@@ -89,7 +92,8 @@
 </script>
 
 <template>
-    <form ref="formRef">
+    <Loader v-if="loading"/>
+    <form v-else ref="formRef">
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label" for="company">Company</label>
         <div class="col-sm-9">

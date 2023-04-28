@@ -4,9 +4,11 @@
     import { onMounted, ref } from 'vue';
     import {handleValidationError} from "@/handlers";
     import {countries, phoneMaska} from "@/utils";
+    import Loader from "@/components/Loader.vue";
 
     const props = defineProps(['onNext']);
     const store = useStore();
+    const loading = ref(true);
     const formRef = ref(null);
     const commonError = ref(null);
     const personalForm = ref(store.getters['members/getPersonal']);
@@ -26,6 +28,7 @@
                 commonError.value = err.message
             }
         }
+        loading.value = false;
     });
 
     /**
@@ -80,7 +83,8 @@
 </script>
 
 <template>
-    <form @submit.prevent="nextClick" ref="formRef" novalidate>
+    <Loader v-if="loading"/>
+    <form v-else @submit.prevent="nextClick" ref="formRef" novalidate>
     <div class="row mb-3">
         <label  class="col-sm-3 col-form-label required" for="firstName">First Name</label>
         <div class="col-sm-9">
