@@ -43,7 +43,7 @@
      */
     const submit = async() => {
         const user = store.getters['members/getId'];
-        if(user != null){
+        if(user != null && !isObjectEmpty(detailedForm.value)){
             await store.dispatch('members/update', {...detailedForm.value, id:id.value});
         }
     }
@@ -74,6 +74,17 @@
             value:event.target.files[0]
         })
     }
+    const isObjectEmpty = (obj) => {
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (obj[key] !== null && obj[key] !== '' && obj[key] !== undefined) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 </script>
 
