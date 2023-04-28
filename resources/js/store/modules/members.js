@@ -57,10 +57,14 @@ const actions = {
      * Load to the state members list.
      * @param commit
      * @param fields
+     * @param showHidden
      * @returns {Promise<void>}
      */
-    async fetchMembers({commit}, fields){
-        const url = `/api?fields=${JSON.stringify(fields)}`;
+    async fetchMembers({commit}, {fields, showHidden = false}){
+        let url = `/api?fields=${JSON.stringify(fields)}`;
+        if(showHidden){
+            url = url + `&showHidden=true`;
+        }
         const _res = await fetch(url);
         let res = await _res.json();
         commit('setMembers', res);

@@ -7,7 +7,7 @@
   const img = ref('');
   onBeforeMount(async() => {
     const fields = ['firstName', 'lastName', 'photo', 'reportSubject', 'email'];
-    await store.dispatch('members/fetchMembers', fields);
+    await store.dispatch('members/fetchMembers', {fields});
     members.value = store.getters['members/getMembers'];
   });
 

@@ -19,11 +19,18 @@ class MemberController extends Controller
      */
     public function index(Request $request): Collection
     {
+        $showHidden = $request->query('showHidden');
         $columns = json_decode(str_replace("'", '"', $request->query('fields')));
         if(empty($columns)){
             $columns = ['*'];
         }
-        $members = Member::all($columns);
+        $members = [];
+        if($showHidden == null || $showHidden == 'false'){
+            $members = Member::where('hidden', 'false')->get($columns);
+        }
+        else{
+            $members = Member::all($columns);
+        }
         if(in_array('photo', $columns) || $columns == ['*']){
             $members = $members->map(function($member) {
                 if($member->photo){
@@ -39,12 +46,12 @@ class MemberController extends Controller
     }
 
     /**
-     * Returns the count of the members of the conference.
+     * Returns the count of the visible members of the conference.
      * @return array
      */
     public function count():array
     {
-        return ['count' => Member::count()];
+        return ['count' => Member::where('hidden', false)->count()];
     }
 
     /**

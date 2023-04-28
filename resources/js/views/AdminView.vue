@@ -18,7 +18,7 @@ onBeforeMount(async()=>{
         if(store.getters["auth/getToken"] === ''){
             await router.push('/login');
         }
-        await store.dispatch('members/fetchMembers', ['*']);
+        await store.dispatch('members/fetchMembers', {fields:['*'], showHidden:true});
         members.value = store.getters['members/getMembers'];
         keys.value = Object.keys(members.value[0]).filter(key => !unwantedKeys.includes(key));
     }catch (err){
