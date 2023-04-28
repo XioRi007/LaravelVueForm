@@ -3,12 +3,18 @@
       <div class="container flex-nowrap">
         <router-link class="navbar-brand" to="/">Conference</router-link>
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
-          <ul class="navbar-nav ml-auto d-flex flex-row col-6 col-sm-4 col-lg-2 justify-content-between">
+          <ul class="navbar-nav ml-auto d-flex flex-row col-6 col-sm-4 col-lg-3 justify-content-between">
             <li class="nav-item">
               <router-link class="nav-link" to="/">Register</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/members">Members</router-link>
+            </li>
+            <li class="nav-item" v-if="isAdmin">
+              <router-link class="nav-link text-success" to="/admin">Admin</router-link>
+            </li>
+            <li class="nav-item" v-else>
+              <router-link class="nav-link text-success" to="/login">Login</router-link>
             </li>
           </ul>
         </div>
@@ -17,5 +23,8 @@
   </template>
   <script setup>
   import { RouterLink } from 'vue-router'
-
+  import {useStore} from "vuex";
+  import {computed} from "vue";
+  const store = useStore();
+  const isAdmin = computed(()=>store.getters["auth/getToken"]);
   </script>
