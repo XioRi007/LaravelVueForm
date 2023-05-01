@@ -58,11 +58,11 @@
                 if(userId != null){
                     await store.dispatch('members/update', {...personalForm.value, id:userId});
                 }else{
-                    await store.dispatch('members/registerParticipant');
+                    await store.dispatch('members/register');
                     const user = store.getters['members/getId'];
                     localStorage.setItem('user', user);
                 }
-                props.onNext();
+                // props.onNext();
             }catch(err){
                 handleValidationError(err, formRef, commonError);
             }

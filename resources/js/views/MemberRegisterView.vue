@@ -10,7 +10,7 @@ const store = useStore();
  */
  onBeforeMount(() => {
   const savedUser = localStorage.getItem('user');
-  if (savedUser !== null) {
+  if (savedUser !== null && savedUser !== 'null') {
       store.commit('members/setForm', {
           name:'id',
           value:savedUser

@@ -142,7 +142,7 @@ const actions = {
      * @param rootGetters
      * @returns {Promise<void>}
      */
-    async registerParticipant({rootGetters}){
+    async register({rootGetters}){
         let formData = new FormData();
         for (const property in rootGetters['members/getPersonal']) {
             formData.append(property, state.form[property]);
@@ -150,7 +150,11 @@ const actions = {
         formData.delete('id');
 
         try{
-            await axios.post(`/api`, formData);
+            const _res = await axios.post(`/api`, formData);
+            const res = await _res.data;
+            if(res.success){
+                state.form.id = res.id;
+            }
         }catch (e) {
             if(e.response.data.errors){
                 throw e.response.data.errors;

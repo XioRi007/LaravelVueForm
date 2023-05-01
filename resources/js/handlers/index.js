@@ -5,7 +5,9 @@ export const handleValidationError = (err, formRef, commonError)=>{
     for (const field in err) {
         formRef.value.classList.remove('was-validated');
         formRef.value[field].classList.add('is-invalid');
-        const errorField = document.getElementById(`${field}_error`);
-        errorField.textContent=err[field].join(' \n');
+        const errorFields = document.querySelectorAll(`#${field}_error`);
+        errorFields.forEach((e)=>{
+            e.textContent = err[field].join(' \n');
+        });
     }
 }
