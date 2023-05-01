@@ -17,3 +17,7 @@ If occurs the error during npm run build try the following
 npm install vite
 npm run build
 ```
+Admin credentials is 
+admin@email.com
+password
+
