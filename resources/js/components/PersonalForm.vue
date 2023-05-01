@@ -62,7 +62,7 @@
                     const user = store.getters['members/getId'];
                     localStorage.setItem('user', user);
                 }
-                // props.onNext();
+                props.onNext();
             }catch(err){
                 handleValidationError(err, formRef, commonError);
             }
