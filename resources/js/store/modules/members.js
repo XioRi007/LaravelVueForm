@@ -1,22 +1,25 @@
 import axios from "axios";
-const defaultForm = {
-    id:null,
-    firstName: '',
-    lastName: '',
-    birthdate: '',
-    reportSubject: '',
-    country: 'Ukraine',
-    phone: '+',
-    email: '',
-    company:'',
-    position:'',
-    about:'',
-    photo:''}
+const getDefaultForm = ()=> {
+    return {
+        id: null,
+        firstName: '',
+        lastName: '',
+        birthdate: '',
+        reportSubject: '',
+        country: 'Ukraine',
+        phone: '+',
+        email: '',
+        company: '',
+        position: '',
+        about: '',
+        photo: ''
+    }
+}
 
 const state = {
     count:0,
     list:[],
-    form: defaultForm
+    form: getDefaultForm()
 }
 // getters
 const getters = {
@@ -189,7 +192,7 @@ const mutations = {
         state.form[payload.name] = payload.value;
     },
     clearForm(state){
-        Object.assign(state, defaultForm);
+        Object.assign(state.form, getDefaultForm());
     }
 }
 

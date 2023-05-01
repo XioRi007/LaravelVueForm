@@ -58,7 +58,6 @@ const submit = async(e) => {
                                         <div class="invalid-feedback text-center">
                                             Please enter a password.
                                         </div>
-                                        <div id="passwordHelp" class="form-text text-center">Minimum length is 8 symbols.</div>
                                     </div>
                                 </div>
                                 <div class="row mb-1 text-danger text-center">

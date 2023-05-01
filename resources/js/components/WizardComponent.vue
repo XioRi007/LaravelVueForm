@@ -34,7 +34,7 @@
      * Clears state and localStorage
      */
     onUnmounted(()=>{
-        if(completed.value == true){
+        if(completed.value === true){
             localStorage.clear();
             store.commit('members/clearForm');
         }

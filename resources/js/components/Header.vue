@@ -13,6 +13,9 @@
             <li class="nav-item" v-if="isAdmin">
               <router-link class="nav-link text-success" to="/admin">Admin</router-link>
             </li>
+            <li class="nav-item" v-if="isAdmin">
+               <button class="btn btn-outline-danger ms-1" @click="logout">Logout</button>
+            </li>
             <li class="nav-item" v-else>
               <router-link class="nav-link text-success" to="/login">Login</router-link>
             </li>
@@ -27,4 +30,14 @@
   import {computed} from "vue";
   const store = useStore();
   const isAdmin = computed(()=>store.getters["auth/getToken"]);
+  const logout = async () => {
+      try {
+          await store.dispatch('auth/logout');
+          window.location.href = '/';//not router.push to rerender the header link
+      } catch (err) {
+          console.log(err);
+          store.commit('auth/deleteToken');
+          window.location.href = '/login';
+      }
+  }
   </script>

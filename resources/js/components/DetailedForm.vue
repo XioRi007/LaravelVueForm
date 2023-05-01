@@ -34,6 +34,12 @@
             }
         }
         catch(err){
+            if (err.response.status === 404){
+                localStorage.removeItem('user');
+                localStorage.removeItem('step');
+                store.commit('members/clearForm');
+                props.onBack();
+            }
             console.log(err)
             commonError.value = err.message;
         }

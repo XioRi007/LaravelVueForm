@@ -29,16 +29,7 @@ onBeforeMount(async()=>{
         await router.push('/login');
     }
 })
-const logout = async () => {
-    try {
-        await store.dispatch('auth/logout');
-        window.location.href = '/';//not router.push to rerender the header link
-    } catch (err) {
-        console.log(err);
-        store.commit('auth/deleteToken');
-        window.location.href = '/login';
-    }
-}
+
 const deleteHandler = (id) => {
     return async ()=>{
         await store.dispatch('members/delete', id);
@@ -70,10 +61,10 @@ const visibilityHandler = (id, hidden) => {
                     <div :id="'collapse-' + member.id" class="accordion-collapse collapse" :data-bs-parent="'#parent-' + member.id">
                         <div class="accordion-body text-start">
                             <div class="row px-4">
-                                <div class="col-6">
+                                <div class="col-11">
                                     <p v-for="field in keys"><strong>{{field}}</strong>: {{member[field]}}</p>
                                 </div>
-                                <div class="col-6 d-flex flex-column align-items-end">
+                                <div class="col-1 d-flex flex-column align-items-end">
                                     <Modal
                                         title="Delete member"
                                         :icon="DeleteIcon"
@@ -101,7 +92,6 @@ const visibilityHandler = (id, hidden) => {
                     </div>
                 </div>
             </div>
-            <button @click="logout" class="btn btn-success">Logout</button>
         </div>
     </div>
 </template>

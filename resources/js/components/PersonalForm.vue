@@ -25,7 +25,13 @@
                 personalForm.value = store.getters['members/getPersonal'];
             }
             catch(err){
-                commonError.value = err.message
+                if (err.response.status === 404){
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('step');
+                    store.commit('members/clearForm');
+                }else{
+                    commonError.value = err.message
+                }
             }
         }
         loading.value = false;

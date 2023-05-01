@@ -21,7 +21,7 @@ const store = useStore();
 const router = useRouter();
 const commonError = ref(null);
 const formRef = ref(null);
-const form = ref(props.member);
+const form = ref( Object.assign({}, props.member));
 
 const handler = async (e) => {
     if (formRef.value.checkValidity()) {
@@ -171,7 +171,7 @@ const setPhoto = (event) => {
         </div>
         <div class="controls">
             <button class="btn btn-success" type="submit">
-                Next
+                Save
             </button>
         </div>
     </form>
