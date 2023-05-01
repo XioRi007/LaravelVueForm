@@ -65,8 +65,8 @@ const actions = {
         if(showHidden){
             url = url + `&showHidden=true`;
         }
-        const _res = await fetch(url);
-        let res = await _res.json();
+        const _res = await axios.get(url);
+        let res = _res.data;
         commit('setMembers', res);
     },
 
@@ -95,8 +95,8 @@ const actions = {
      */
     async loadMember({commit}, fields){
         const url = `/api/${state.form.id}?fields=${JSON.stringify(fields)}`;
-        const _res = await fetch(url);
-        const res = await _res.json();
+        const _res = await axios.get(url);
+        const res = _res.data;
         if(res.error){
             throw new Error(res.error);
         }
@@ -125,11 +125,8 @@ const actions = {
         }
         formData.delete('id');
         formData.append('_method', 'PUT');
-        const _res = await fetch(`/api/${payload.id}`, {
-            method:"POST",
-            body:formData
-        });
-        const res = await _res.json();
+        const _res = await axios.post(`/api/${payload.id}`, formData);
+        const res = await _res.data;
         if(!res.success){
             if(res.errors){
                 throw res.errors;
@@ -149,11 +146,8 @@ const actions = {
             formData.append(property, state.form[property]);
         }
         formData.delete('id');
-        const _res = await fetch(`/api`, {
-            method:'POST',
-            body:formData
-        });
-        const res = await _res.json();
+        const _res = await axios.post(`/api`, formData);
+        const res = await _res.data;
         if(res.success){
             state.form.id = res.id;
         }
@@ -168,8 +162,8 @@ const actions = {
      * @returns {Promise<void>}
      */
     async fetchMembersCount({commit}){
-        const _res = await fetch(`/api/count`);
-        const res = await _res.json();
+        const _res = await axios.get(`/api/count`);
+        const res = await _res.data;
         commit('setMembersCount', res.count);
     }
 }
