@@ -125,13 +125,15 @@ const actions = {
         }
         formData.delete('id');
         formData.append('_method', 'PUT');
-        const _res = await axios.post(`/api/${payload.id}`, formData);
-        const res = await _res.data;
-        if(!res.success){
-            if(res.errors){
-                throw res.errors;
+        try{
+            await axios.post(`/api/${payload.id}`, formData);
+        }catch (e) {
+            if(e.response.data.errors){
+                throw e.response.data.errors;
             }
-            throw new Error(res.error);
+            else{
+                throw e;
+            }
         }
     },
 
@@ -146,13 +148,16 @@ const actions = {
             formData.append(property, state.form[property]);
         }
         formData.delete('id');
-        const _res = await axios.post(`/api`, formData);
-        const res = await _res.data;
-        if(res.success){
-            state.form.id = res.id;
-        }
-        else{
-            throw res.errors;
+
+        try{
+            await axios.post(`/api`, formData);
+        }catch (e) {
+            if(e.response.data.errors){
+                throw e.response.data.errors;
+            }
+            else{
+                throw e;
+            }
         }
     },
 
