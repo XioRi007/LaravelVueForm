@@ -7,6 +7,8 @@
         @vite(['resources/js/app.js', 'resources/css/app.css'])
     </head>
     <body class="antialiased">
+        <!-- CSRF Token -->
+        {{ csrf_field() }}
         <div id="app"></div>
     </body>
 </html>
