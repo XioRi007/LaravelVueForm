@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import { vMaska } from "maska"
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
@@ -14,6 +14,10 @@ const props = defineProps({
     member:{
         type: Object,
         required: true,
+    },
+    targetId:{
+        type: String,
+        required: true,
     }
 });
 const store = useStore();
@@ -22,6 +26,12 @@ const commonError = ref(null);
 const formRef = ref(null);
 const form = ref( Object.assign({}, props.member));
 
+onMounted(()=>{
+    const modal = document.getElementById(props.targetId);
+    modal.addEventListener('hidden.bs.modal', ()=>{
+        reset();
+    })
+});
 const handler = async (e) => {
     if (formRef.value.checkValidity()) {
         try {

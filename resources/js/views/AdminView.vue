@@ -77,7 +77,7 @@ const visibilityHandler = (id, hidden) => {
                                         title="Edit member"
                                         :target-id="'EditModal'+member.id"
                                         :button="false">
-                                        <EditForm :memberId="member.id" :member="member"/>
+                                        <EditForm :memberId="member.id" :member="member" :targetId="'EditModal'+member.id"/>
                                     </Modal>
                                     <Modal
                                         :title="member.hidden ? 'Show':'Hide' +' member'"
