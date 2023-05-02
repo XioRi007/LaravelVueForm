@@ -16,7 +16,6 @@ const props = defineProps({
         required: true,
     }
 });
-
 const store = useStore();
 const router = useRouter();
 const commonError = ref(null);
@@ -42,6 +41,9 @@ const handler = async (e) => {
         formRef.value.classList.add('was-validated');
     }
 }
+const reset = () => {
+    form.value = Object.assign({}, props.member);
+}
 const todayDate = () => {
     let today = new Date();
     let year = today.getFullYear();
@@ -55,7 +57,7 @@ const setPhoto = (event) => {
 </script>
 
 <template>
-    <form ref="formRef" @submit.prevent="handler" novalidate class="p-3">
+    <form ref="formRef" @submit.prevent="handler" @reset.prevent="reset" novalidate class="p-3">
         <div class="row">
             <div class="col-6">
                 <div class="row mb-3">
@@ -169,9 +171,12 @@ const setPhoto = (event) => {
         <div class="row mb-3 text-danger" v-if="commonError!=null">
             <p>{{ commonError }}</p>
         </div>
-        <div class="controls">
+        <div class="controls justify-content-start">
             <button class="btn btn-success" type="submit">
                 Save
+            </button>
+            <button class="btn btn-primary me-3" type="reset">
+                Clear changes
             </button>
         </div>
     </form>

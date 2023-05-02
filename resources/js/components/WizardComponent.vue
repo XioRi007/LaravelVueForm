@@ -4,6 +4,7 @@
     import PersonalForm from '../components/PersonalForm.vue'
     import DetailedForm from '../components/DetailedForm.vue'
     import ShareLinks from '../components/ShareLinks.vue'
+    import CompleteStep from "@/components/CompleteStep.vue";
 
 
     const store = useStore();
@@ -11,7 +12,7 @@
     const completed = computed(()=>step.value >= maxStep);
     const maxStep = 3;
     const stepperProgress = computed(()=>(100) * (completed.value ? 1: step.value-1) + '%');
-    const membersCount = ref(0);
+
 
     /**
      * If localStorage contains step - loads it to state
@@ -26,8 +27,6 @@
                 step.value = 1;
                 localStorage.setItem('step', 1);
             }
-            await store.dispatch('members/fetchMembersCount');
-            membersCount.value = store.getters['members/getMembersCount'];
     });
 
     /**
@@ -84,23 +83,9 @@
             <DetailedForm v-if="step==2" :on-next="nextClick" :on-back="backClick" class="col-9"></DetailedForm>
           </div>
           <div v-else>
-            <h1 class="my-5">You have successfully registered!</h1>
-            <div class="row justify-content-center mb-5 bg-body">
-            <div class="col-9 justify-center">
-                <h4 class="">Share our conference with others:</h4>
-                <ShareLinks></ShareLinks>
-                <div class="row mt-5">
-                <RouterLink to="/members" class="col text-center" >All members({{ membersCount }})</RouterLink>
-            </div>
+              <CompleteStep/>
           </div>
-
-        </div>
       </div>
-
-      </div>
-
-
-
 </div>
 </template>
 <style>

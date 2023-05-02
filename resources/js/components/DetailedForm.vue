@@ -78,10 +78,7 @@
         }
     }
     const setPhoto = (event) => {
-        store.commit('members/setForm', {
-            name:'photo',
-            value:event.target.files[0]
-        })
+        detailedForm.value.photo = event.target.files[0];
     }
     const isObjectEmpty = (obj) => {
         for (let key in obj) {
