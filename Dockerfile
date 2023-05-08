@@ -22,11 +22,8 @@ RUN chown -R www-data:www-data /app
 
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
  && apt-get install -y nodejs
-RUN composer install
 RUN npm install vite
 RUN npm install
-RUN npm run build
-RUN php artisan storage:link
 
 
 COPY vhost.conf /etc/apache2/sites-available/000-default.conf
