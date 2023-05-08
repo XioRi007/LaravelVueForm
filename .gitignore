@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 assets
 manifest.json
+mysql

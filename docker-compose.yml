@@ -1,0 +1,35 @@
+version: '3.5'
+services:
+
+    #PHP Service
+    laravel-app:
+        build:
+            context: '.'
+        container_name: laravel-app
+        ports:
+            - 8000:80
+        networks:
+            - app-network
+
+    #MySQL Service
+    db:
+        image: mysql:5.7.22
+        container_name: db
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: laravel
+            MYSQL_ROOT_PASSWORD: root
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - app-network
+
+#Docker Networks
+networks:
+    app-network:
+        driver: bridge

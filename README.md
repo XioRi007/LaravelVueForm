@@ -21,3 +21,16 @@ Admin credentials is
 admin@email.com
 password
 
+## Docker
+```
+docker compose build
+docker compose up -d
+```
+If it is the first time run:
+```
+docker-compose exec laravel-app php artisan migrate --seed
+```
+To stop run
+```
+docker-compose stop
+```
