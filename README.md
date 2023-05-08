@@ -22,13 +22,16 @@ admin@email.com
 password
 
 ## Docker
+In .env change DB_HOST to db
 ```
 docker compose build
 docker compose up -d
 ```
-If it is the first time run:
+Run if you need:
 ```
-docker-compose exec laravel-app php artisan migrate --seed
+docker-compose exec laravel-app composer install
+docker-compose exec laravel-app npm run build:wp
+docker-compose exec laravel-app php artisan storage:link
 ```
 To stop run
 ```
